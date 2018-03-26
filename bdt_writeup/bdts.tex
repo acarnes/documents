@@ -47,10 +47,10 @@ where $l(z_j,\hat{z}_j)$ denotes the loss (aka error) for a single data point wi
 The algorithm goes as follows. First fit the entire feature space with the constant that minimizes the loss function in the entire space. Then for each feature, search for the best division among a set of candidate split values belonging to that feature. For each candidate value, propose a cut in the form of a hyperplane through a value of that feature, dividing the space into two candidate regions. Then fit the two candidate regions with the constants that minimize the loss in the respective regions. 
 
 \begin{equation}
-\frac{d}{dc_{R}} L(z,\hat{z} = c_{R}) = 0 \textrm{ | } z,\hat{z} \in R
+\frac{d}{dc_{R}} L(z,\hat{z} = c_{R}) = 0 \textrm{ $|$ } z,\hat{z} \in R
 \end{equation}
 
-The loss before the subdivision, $L_{before} = L(z,\hat{z}_{before})$, is compared to the loss after the subdivision, $L_{after} = L(z,\hat{z}_{after})$, and the error reduction is calculated like so, $-(L_{after} - L_{before})$, which is a positive number since $L_{after}$ has a smaller error than $L_{before}$. Call $R_{i}$ the region to split and $R_{i,1}$ and $R_{i,2}$ the resulting regions after the proposed split. Again using $l(z_j,\hat{z}_j)$ to denote the loss for a single data point with true value $z_j$ and predicted value $\hat{z}_j$ then the error reduction may be written, 
+The loss before the subdivision, $L_{before} = L(z,\hat{z}_{before})$, is compared to the loss after the subdivision, $L_{after} = L(z,\hat{z}_{after})$, and the error reduction is calculated like so, $-(L_{after} - L_{before})$, which is a positive number since $L_{after}$ has a smaller error than $L_{before}$. Call $R_{i}$ the region to split and $R_{i,1}$ and $R_{i,2}$ the resulting regions after the proposed split. Again using $l(z_j,\hat{z}_j)$ to denote the loss for a single data point with true value $z_j$ and predicted value $\hat{z}_j$, the error reduction may be written 
 
 \begin{equation}
 \textrm{Error Reduction} = \sum_{j \in R_{i}} l(z_j,c_i) - \sum_{j \in R_{i,1}} l(z_j,c_{i,1}) - \sum_{j \in R_{i,2}} l(z_j,c_{i,2}).
