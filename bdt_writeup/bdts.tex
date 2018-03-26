@@ -38,16 +38,22 @@ Let's get to it. The BDT algorithm is a supervised machine learning algorithm: i
 
 \subsection{A Single Decision Tree}
 
-The decision tree needs to decide how to partition the space such that it is computationally efficient and reduces the error defined by the loss function, $L(z,\hat{z})$, where $z$ is the vector of true values and $\hat{z}$ is the vector of predicted values. To meet these demands the tree building algorithm takes a greedy approach, recursively dividng the regions into two until the maximum number of terminal nodes, a hyperparameter determined by the user, is reached. The maximum number of terminal nodes corresponds to the number of predictive regions in feature space. The algorithm goes as follows. First fit the entire feature space with the constant that minimizes the loss function in the entire space. Then search along each feature trying to find the best division by looking at a set of values along a feature. For each value, propose a cut in the form of a hyperplane through a value of that feature, dividing the space into two candidate regions. Then fit the two candidate regions with the constants that minimize the loss in the respective regions. 
+The decision tree needs to decide how to partition the space such that it is computationally efficient and reduces the error defined by the loss function, $L(z,\hat{z})$, where $z$ is the vector of true values for all data points in the data set and $\hat{z}$ is the vector of predicted values. Usually $L(z,\hat{z})$ looks something like 
+\begin{equation}
+L(z,\hat{z}) = \sum_{j} l(z_j,\hat{z}_j)
+\end{equation}
+where $l(z_j,\hat{z}_j)$ denotes the loss (aka error) for a single data point with true value $z_j$ and predicted value $\hat{z}_j$. To meet the efficiency demand, the tree building algorithm takes a greedy approach, recursively dividng the regions into two until the maximum number of terminal nodes, a hyperparameter determined by the user, is reached. The maximum number of terminal nodes corresponds to the number of predictive regions in feature space. 
+
+The algorithm goes as follows. First fit the entire feature space with the constant that minimizes the loss function in the entire space. Then for each feature, search for the best division among a set of candidate split values belonging to that feature. For each candidate value, propose a cut in the form of a hyperplane through a value of that feature, dividing the space into two candidate regions. Then fit the two candidate regions with the constants that minimize the loss in the respective regions. 
 
 \begin{equation}
-\frac{d}{dc_{R}} L(z,\hat{z} = c_{R}) = 0 | z,\hat{z} \in R
+\frac{d}{dc_{R}} L(z,\hat{z} = c_{R}) = 0 \textrm{ | } z,\hat{z} \in R
 \end{equation}
 
-The loss before the subdivision, $L_{before} = L(z,\hat{z}_{before})$, is compared to the loss after the subdivision, $L_{after} = L(z,\hat{z}_{after})$, and the error reduction is calculated like so, $-(L_{after} - L_{before})$, which is a positive number since $L_{after}$ has a smaller error than $L_{before}$. Call $R_{i}$ the region to split and $R_{i,1}$ and $R_{i,2}$ the resulting regions after the proposed split. 
+The loss before the subdivision, $L_{before} = L(z,\hat{z}_{before})$, is compared to the loss after the subdivision, $L_{after} = L(z,\hat{z}_{after})$, and the error reduction is calculated like so, $-(L_{after} - L_{before})$, which is a positive number since $L_{after}$ has a smaller error than $L_{before}$. Call $R_{i}$ the region to split and $R_{i,1}$ and $R_{i,2}$ the resulting regions after the proposed split. Again using $l(z_j,\hat{z}_j)$ to denote the loss for a single data point with true value $z_j$ and predicted value $\hat{z}_j$ then the error reduction may be written, 
 
 \begin{equation}
-\textrm{Error Reduction} = \sum_{j \in R_{i}} [z-c_i]^2 - \sum_{j \in R_{i,1}} [z-c_{i,1}]^2 - \sum_{j \in R_{i,2}} [z-c_{i,2}]^2
+\textrm{Error Reduction} = \sum_{j \in R_{i}} l(z_j,c_i) - \sum_{j \in R_{i,1}} l(z_j,c_{i,1}) - \sum_{j \in R_{i,2}} l(z_j,c_{i,2}).
 \end{equation}
 
 The cut with the largest error reduction of those searched is the best cut for the feature. The algorithm checks the other features in the same manner, reporting the best cut and error reduction for each. The cut chosen for the region is the cut with the largest error reduction of all the features. Now the feature space is divided into two regions, each with constant fits. The algorithm then repeats the same process in each subregion, figuring out the best cut and constants for each, eventually splitting the region that provides the maximum gain in error reduction. This process continues, each time splitting the subspace that yields the best return, until the number of regions equals the maximum number of terminal nodes set by the user. 
