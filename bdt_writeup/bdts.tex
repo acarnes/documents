@@ -63,11 +63,11 @@ The cut with the largest error reduction of those searched is the best cut for t
 Here is an example of the tree building algorithm using Least Squares as the loss function. Consider a case with N events where each event has two features x and y, and each event is uniquely labeled by the subscript i. The maximum number of terminal nodes in this example is 3.
 
 \begin{equation}
-\textrm{Least Squares} \equiv \frac{1}{2}\sum_{i=1}^{N} [z(x_i,y_i)-\hat{z}(x_i,y_i)]^2
+\textrm{Least Squares} \equiv \frac{1}{2}\sum_{i=1}^{N} [z_i-\hat{z}_i]^2
 \end{equation}
 
 \begin{equation}
-\frac{d}{dc_R}\frac{1}{2}\sum_{i=1}^{N} [z(x_i,y_i)-c_R]^2 = 0 \rightarrow c_R = \frac{1}{N}\sum_{i=1}^{N}z_i
+\frac{d}{dc_R}\frac{1}{2}\sum_{i=1}^{N} [z_i-c_R]^2 = 0 \rightarrow c_R = \frac{1}{N}\sum_{i=1}^{N}z_i
 \end{equation}
 
 Take a look at the the top left of Figure \ref{fig:dtbuild}. The events for the example were generated such that those with x$>$0.5 have a true value z=10, those with x$<$0.5 and y$>$0.5 have z=-8, and those with x$<$0.5 and y$<$0.5 have z=-12. The colored regions represent the true values of the underlying true distribution and the crosses represent the generated events themselves. In the end the tree with three terminal nodes should model these generated regions, correctly predicting the events. In the next three pictures in Figure \ref{fig:dtbuild} the colors of the crosses still represent the true values, but the colored regions represent the fits in the decision tree regions at each iteration.
@@ -206,7 +206,7 @@ Boosting involves iteratively adding trees to create a forest. Each subseuqent t
 Now $T_0$ is the initial fit and fits the true values as well as possible. Then, $T_1$ is created such that it corrects the predictions of $T_0$. After, $T_2$ corrects $T_0 + T_1$, and in general the n$^{th}$ tree, $T_n$, corrects the predictions given by the previous n trees. This is analogous to perturbation theory in physics. The values the n$^{th}$ tree should model at each iteration are given by $d\hat{z}_{n}$ such that this correction heads in the direction of the minimum at that stage. This implies that $d\hat{z}_{n}$ should be in the same direction as the negative of the gradient, and that the nth corrective term to the forest, $T_n$, should model $d\hat{z}_{n}$ up to some constant.
 
 \begin{equation}
--\frac{d}{d\hat{z}_{n-1}(x^i)}L(z(x^i),\hat{z}_{n-1}(x^i) = T_0(x^i)+...+T_{n-1}(x^i)) \rightarrow d\hat{z}^{i}_{n}
+-\frac{d}{d\hat{z}_{n-1}(x^i)}L(z^i,\hat{z}^i_{n-1} = T_0(x^i)+...+T_{n-1}(x^i)) \rightarrow d\hat{z}^{i}_{n}
 \end{equation}
 
 In this way, the n$^{th}$ tree is an additive correction fit to the desired corrections, $d\hat{z}^{i}_{n}$. In other words, the tree chooses the appropriate splits and constants using the $d\hat{z}^{i}_{n}$'s as the true values. Because computationally efficient methods exist for building a tree with Least Squares, most implementations fit fit the n$^{th}$ targets for the specific loss function using Least Squares rather than the loss function itself. Fitting the appropriate corrections guarantees that the algorithm heads downhill, but further steps can be taken to reach a more minimum value. After the tree has modeled the gradient by forming the regions in feature spaceand fitting them with constants, the constants in those regions can be recalculated as to best minimize the loss function within each region. 
@@ -273,7 +273,7 @@ Anyways, let's cover the implemention and functionality of some common error met
 
 \subsubsection{LossFunctionBDT}
 
-LossFunctionBDT is the interface. All of the methods require implementation when inherited. The fit is the constant that minimizes the loss function for the events in the node. The target is the target for the upcoming tree in the forest to model. It is the negative gradient of the loss function with respect to the predicted value for an event. Init must initialize the parameters for the loss function if they exist and provide the events with an initial fit.  
+LossFunctionBDT is the interface. All of the methods require implementation when inherited. The fit is the constant that minimizes the loss function for the events in the node. The target is the target for the upcoming tree in the forest to model -- usually some kind of residual. The target is the negative gradient of the loss function with respect to the predicted value for an event. Init must initialize the parameters for the loss function if they exist and provide the events with an initial fit.  
 
 \begin{verbatim}
 class LossFunctionBDT
@@ -288,7 +288,7 @@ class LossFunctionBDT
 This loss function implements LossFunctionBDT and defines the appropriate behavior for the Least Squares error metric.
 
 \begin{equation}
-\textrm{Least Squares} \equiv \frac{1}{2}\sum_{i=1}^{N} [z^i-\hat{z^i}]^2
+\textrm{Least Squares} \equiv \frac{1}{2}\sum_{i=1}^{N} [z^i-\hat{z}^i]^2
 \end{equation}
 
 Taking a derivative with respect to the i$^{th}$ predicted value yields the residual. Setting $\hat{z}$ to a constant for all i and taking a derivative with repect to $\hat{z}$ yields the constant of best fit, the mean of the residuals.    
@@ -321,7 +321,7 @@ class LeastSquaresLossFunctionBDT
 This loss function implements LossFunctionBDT and defines the appropriate behavior for the Absolute Deviation error metric.
 
 \begin{equation}
-\textrm{Absolute Deviation} \equiv \sum_{i=1}^{N} |z^i-\hat{z^i}|
+\textrm{Absolute Deviation} \equiv \sum_{i=1}^{N} |z^i-\hat{z}^i|
 \end{equation}
 
 Taking a derivative with respect to the i$^{th}$ predicted value yields +1 for $z>\hat{z}$ and -1 for $z<\hat{z}$. Setting $\hat{z}$ to a constant for all i and taking a derivative with repect to $\hat{z}$ yields the constant of best fit, the median of the residuals.    
@@ -381,7 +381,7 @@ class HuberLossFunctionBDT
     for(event in events)  
       event.target = Target(event)
 
-  Target(event)  # sign of residual                 
+  Target(event)  # the least extreme b/w the cutoff and the residual 
     residual = event.trueValue - event.predictedValue
     return sign(residual)*min(fResidualCutoff, abs(residual))
 
