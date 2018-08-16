@@ -37,6 +37,7 @@
 %\bibliographystyle{elsarticle-num}
 %%%%%%%%%%%%%%%%%%%%%%%
 
+
 \begin{document}
 
 \begin{frontmatter}
@@ -48,7 +49,7 @@
 \address{$^1$University of Florida}
 
 \begin{abstract}
-In order to maximize the chance of discovering a certain effect, many scientific analyses extract subsets of data from the main data set that are sensitive to the effect. If the effect exists, the data in these sensitive subsets is expected to differ significantly from the null hypothesis. There are many ways to extract subsets, but an optimal method should minimize the global p-value on the null hypothesis given the effect. Call the orthogonal subsets of data categories and the selection of subsets categorization. An optimal categorization enhances the power of the experiment and reduces the data needed for discovery. By specifying a metric corresponding to the expected p-value (given the effect), the optimum categorization may be automated using a decision tree. This paper describes the autocategorization algorithm. 
+In order to maximize the chance of discovering a certain effect, many scientific analyses extract subsets of data from the main data set that are sensitive to the effect. If the effect exists, the data in these sensitive subsets is expected to differ significantly from the null hypothesis. There are many ways to extract subsets, but an optimal method should minimize the global p-value on the null hypothesis given the effect. Call the orthogonal subsets of data categories and the selection of subsets categorization. An optimal categorization enhances the power of the experiment and reduces the data needed for discovery. By specifying a metric corresponding to the expected p-value (given the effect), the optimum categorization may be automated using a decision tree. This paper outlines some uses of categorization in High Energy Physics, describes the autocategorization algorithm, and presents uses the autocategorizer in High Energy Physics. 
 \end{abstract}
 
 %\begin{keyword}
@@ -66,9 +67,25 @@ Many scientific analyses attempt to rule out a null hypothesis and declare a dis
 
 The expected hypothesis and the null hypothesis determine probability density functions (PDFs) in a many dimensional feature space. However, data sparesly populates high dimensional spaces, and fits in high dimensions are difficult or untrustworthy in practice, so the PDFs are usually compared over a single discriminating feature - sometimes a few - to determine the p-value. Unfortunately, upon reducing to a lower dimensional PDF comparison, the sensitivity of the analysis is often reduced: feature space regions with large discriminating power are combined with those of high probability but low discrimination.
 
-To regain sensitivity, the regions of feature space with large discriminating power need to be extracted. In this way, it makes sense to divide the feature space up into separate regions, called categories, and compare the low dimensional PDFs within the categories to maximize the sensitivity. By analytically specifying a metric corresponding to the expected p-value the optimum categorization can be automated. This is separate problem from regression or classification where fit values are applied to different regions of space to minimize some loss function. The goal is simply to divide up feature space to maximize the statistical sensitivity.
+To regain sensitivity, the regions of feature space with large discriminating power need to be extracted. In this way, it makes sense to divide the feature space up into separate regions, called categories, and compare the low dimensional PDFs within the categories to maximize the sensitivity. Typically, the categories are decided using expert knowledge. However, by analytically specifying a metric corresponding to the expected p-value the optimum categorization can be automated. This is separate problem from regression or classification where fit values are applied to different regions of space to minimize some loss function. The goal is simply to divide up feature space to maximize the statistical sensitivity.
+
+Focusing on examples from the Large Hadron Collider (LHC) experiments, section \ref{chep} presents the ubiquity of human categorization in HEP to motivate the widespread use cases for automated categorization. Next, the autocategorizer algorithm is detailed in section \ref{acat}. Finally, implementations of the autocategorizer in HEP and the resulting improvements are covered in section \ref{app}.
+
+\section{Categorization at the Large Hadron Collider Experiments}
+\label{chep}
+The Large Hadron Collider accelerates protons or heavy ions to nearly the speed of light and steers them to collide in the 
+ALICE, ATLAS, LHCb, and CMS detectors. The different detectors record the collision data, 
+and scientists in the collaborations analyze it to search for new particles -- like dark matter or the Higgs boson -- 
+and test different theories of physics -- like supersymmetry or the standard model (SM). 
+
+Many analyses at these experiments use categories to improve the statistical power of their investigations. The 2017 ATLAS search for the Higgs decay to two muons \cite{atlashmumu2017} uses categories based upon the transverse momentum of the dimuon system, the pseudorapidity of the muons, and a Boosted Decision Tree (BDT) output. The null hypothesis tested in each of these categories is a model of the dimuon mass ($\m_{\mu\mu}$) distribution where no Higgs to $\mu\mu$ decay exists. The expected hypothesis is the distribution of $m_{\mu\mu}$ according to the Standard Model. Experts in this analysis used their judgement to create the structure of the categories, attempting to minimize the expected p-value on the null. Many other ATLAS analyses also use human expert categorization #### LIST REFERENCES #####. 
+
+The 2017 $t\bar{t}$ dark matter search at CMS analyzes the distribution of missing transverse energy in categories based on BLAH BLAH AND BLAH. The supersymmetry analysis of BLAH BLAH BLAH uses categories based upon X, Y, and Z. There are many other examples at CMS like BLAH BLAH AND BLAH. Many analyses at LHCb and ALICE also use categories REFERENCE THESE TOO. 
+
+The use of categories in HEP is a ubiquitous technique, and wherever this technique is used it could be automated. The autocategorizer algorithm provides an automated method to categorize events that could be used in virtually any HEP analysis. Moreover, the autocategorizer has been used in two CMS analyses to great effect, not only automating the process, but leading to improvements. The implementations and improvements are described in Section $\ref{app}$, but first the algorithm itself is explained.
 
 \section{The Autocategorizer Algorithm}
+\label{acat}
 This section explains the autocategorization algorithm (autocategorizer) in terms of a binned counting experiment using histograms along a single variable, z. Let $H_o$ be the null hypothesis and $H_1$ be the expected hypothesis -- some trusted theory that probably generates the data. The goal of the autocategorizer is to partition feature space in order to minimize the expected p-value. Minimizing the expected p-value will maximize the chance for discovery if $H_1$ is indeed true.   
 
 Let i label the bin and c label an orthogonal partition of feature space -- a category. Each category has its own histograms. Let $z_{c,i}$ describe the amount in the $i^{th}$ bin of the histogram for category c. Moreover, let $H_o$ predict $z_{c,i} = B_{c,i}$ in each bin for category c and let $H_1$ predict $z_{c,i} = S_{c,i} + B_{c,i}$ in each bin for category c.
@@ -128,8 +145,42 @@ split the category with the most gain, until the number of categories desired is
 
 The net sensitivity metric used above is just one approximation of the NLL. Other metrics that track the expected NLL/p-value may be used. For instance, adding the Asimov significance \cite{cowan}(Equation 97) of each bin in quadrature is another reasonable approach.
 
+\section{Applications in High Energy Physics}
+\label{app}
+The standard model of particle physics is an incredibly successful theory, correctly describing all known 
+particles and forces -- except for gravity and the neutrino masses. 
+The discovery of the Higgs boson (H) \cite{fromh2muPAS:1-3} confirmed that W and Z gauge bosons 
+acquire mass through the Higgs mechanism. Soon after, evidence for the Higgs coupling to matter 
+was found through the $H\rightarrow\tau\tau$ and $H\rightarrow bb$ decays \cite{thesis:9-12}.
+In the standard model (SM), the fermion masses are generated by their coupling to the Higgs field \cite{fromh2muPAS:4-7+quarks}. 
+Higgs boson decays to muons and bottom quarks are of particular importance as they extend the study of Higgs couplings to second generation fermions, where deviations from the SM predictions \cite{fromh2muPAS:9,10+bb} could point to new physics. 
+
+The autocategorizer algorithm has been used at the CMS experiment to set limits on the Higgs boson's rate of decay to two muons \cite{cmshiggsmumu2017} and to two b-quarks \cite{VHbbCitation}. In the $H\rightarrow\mu\mu$ analysis, the autocategorizer improves the expected upper limit on the rate of decay by 13\% compared to human expert categorization. The improvement is equivalent to collecting 27\% more data. 
+
+In the comparison, the human expert categorization of the previous $H\rightarrow\mu\mu$ analysis \cite{cmshiggsmumu2012} is reoptimized for the $\sqrt{s} = 13 TeV$ collisions of run 2, resulting in the expert categorization of Figure \ref{fig:hxcats}. The expert categorization serves as a baseline. Running the autocategorizer with the same set of features considered in the 2012 analysis, produces the categories of Figure \ref{fig:autocats}. Histograms of the dimuon mass ($m_{\mu\mu}$) in the different categories are used simultaneously to evaluate the expected upper limit. The SM predictions of $m_{\mu\mu}$ provide the expected hypothesis, while the model for no $H\rightarrow\mu\mu$ decay provides the null.
+
+Not only does the autocategorizer improve the upper limit by 13\%, the algorithm also discovers that the previous $H\rightarrow\mu\mu$ analysis underestimated the importance of b-tagging. To quantify the contribution of this discovery, the autocategorizer was rerun without b-tagging in the feature set, yielding only 10\% improvement. The test implies that the b-tagging discovery accounts for 23\% of the autocategorizer's improvement. Note that the autocategorizer also finds the barrel, overlap, and endcap regions in $\eta$. BLAH BLAH ome stuff about the categories making sense with MET dimupt and dijet mass and dijet dEta.
+
+Categorizing on standard features is only one option. Autocategorizing on the score from a Boosted Decision Tree classifier and muon $\eta$ info results in a 23\% improvement in the upper limit and the categories of Figure $\ref{fig:final_categories}$. The improvement is equivalent to 51\% more data. The input features to the BDT can be found in the paper.
+
+The autocategorizer was also used in the $H\rightarrow bb$ CMS analysis to develop a mass analysis.
+
+%A detailed description of the CMS detector can be found in \cite{cms}. 
+
+%The central feature of the CMS apparatus is a superconducting solenoid of 6 m internal diame-
+%ter, providing a magnetic field of 3.8 T. Within the solenoid volume are a silicon pixel and strip
+%tracker, a lead tungstate crystal electromagnetic calorimeter, and a brass and scintillator hadron
+%calorimeter, each composed of a barrel and two endcap sections. Forward calorimeters extend
+%the pseudorapidity ($\eta$) coverage provided by the barrel and endcap detectors. Muons are de-
+%tected in gas-ionization detectors embedded in the steel flux-return yoke outside the solenoid.
+%A more detailed description of the CMS detector, together with a definition of the coordinate
+%system used and the relevant kinematic variables, can be found in \cite{h2mu-paper-22}.
+
+
+
 \section{Conclusions}
-The autocategorizer algorithm automatically maximizes the chance to discover an effect of interest by extracting an optimal ensemble of sensitive regions from a multidimensional feature space. The algorithm has been used at the Compact Muon Solenoid (CMS) experiment at CERN to set limits on the Higgs particle's rate of decay to two muons \cite{cmshiggsmumu2017}. In the Higgs to dimuons analysis, the autocategorizer improves the upper limit on the rate of decay by 15\% compared to human expert categorization with the same simulated data and the same features. The improvement is equivalent to collecting 32\% more data.
+\label{conc}
+The autocategorizer algorithm automatically maximizes the chance to discover an effect of interest by extracting an optimal ensemble of sensitive regions from a multidimensional feature space. 
 
 \section*{References}
 
