@@ -2,6 +2,7 @@
 
 \usepackage{lineno,hyperref}
 \usepackage{color}
+\usepackage{placeins}
 \modulolinenumbers[5]
 
 \journal{Journal of \LaTeX\ Templates}
@@ -93,7 +94,7 @@ The use of categories in HEP is a ubiquitous technique, and wherever this techni
 This section explains the autocategorization algorithm (autocategorizer) in terms of a binned counting experiment using histograms along a single variable, z. Let $H_o$ be the null hypothesis and $H_1$ be the expected hypothesis -- some trusted theory that probably generates the data. The goal of the autocategorizer is to partition feature space in order to minimize the expected p-value. Minimizing the expected p-value will maximize the chance for discovery if $H_1$ is indeed true.   
 
 Let i label the bin and c label an orthogonal partition of feature space -- a category. Each category has its own histograms. Let $z_{c,i}$ describe the amount in the $i^{th}$ bin of the histogram for category c. Moreover, let $H_o$ predict $z_{c,i} = B_{c,i}$ in each bin for category c and let $H_1$ predict $z_{c,i} = S_{c,i} + B_{c,i}$ in each bin for category c.
-\begin{figure}[hbp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.49\linewidth]{binning_signal_example.png}
   \includegraphics[width=0.49\linewidth]{binning_bg_example.png}
@@ -101,6 +102,7 @@ Let i label the bin and c label an orthogonal partition of feature space -- a ca
   {An example of the S and B histograms in a category. The null hypothesis is given by B, and the expected hypothesis is given by S+B.}
   \label{fig:binning_example}
 \end{figure}
+\FloatBarrier
 
 The likelihood to observe $S_{c,i} + B_{c,i}$ in each bin when $B_{c,i}$ is expected in each bin provides a statistical measure of the discrepancy between $H_1$ and $H_o$. A low likelihood corresponds to a large discrepancy and a low p-value. Minimizing the likelihood will minimize the expected p-value. Equivalently, maximizing the negative log-likelihood (NLL) minimizes the expected p-value. The NLL for a single category's histogram is given by,  
 \begin{equation}
@@ -126,13 +128,14 @@ The factor of 2 in front of the log and the $C_{c,i}$ terms standardize the $\ch
 Choosing the categories to maximize the net significance will minimize the p-value. 
 
 With the net significance acting as the metric, a decision tree\cite{cart84} can split up the feature space to maximize the metric. The decision tree algorithm greedily builds the optimum categorization by recursively splitting feature space regions into two using hyperplanes. 
-\begin{figure}[hbp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.98\linewidth]{iter_all.png}
   \caption
   {An example of the autocategorization process for features x,y and three categories. The autocategorizer chooses x=0.52 for the first split and y=0.50 for the second. The colored crosses represent the events that should be grouped together for optimum sensitivity. After three iterations, the categorizer correctly groups those events.}
   \label{fig:iter_example}
 \end{figure}
+\FloatBarrier
 On the first iteration, the autocategorizer calculates the net significance for the inclusive set of all events. The algorithm then searches over the inclusive set, checking all possible split values of the first feature, $x_1$. Events with $x_1$ values less than the split go in one candidate category, and those with $x_1$ values greater than or equal to the split value go into the other candidate category. 
 
 For every split candidate, the algorithm calculates the net significance in the two categories delineated by the split value. The $x_1$ split value that provides the largest gain in significance over the inclusive set is stored along with the value of its gain. The gain is defined in Equation \ref{gain} where c1 and c2 are the prospective categories created from c by splitting on the feature.
@@ -149,6 +152,7 @@ split the category with the most gain, until the number of categories desired is
 
 The net sensitivity metric used above is just one approximation of the NLL. Other metrics that track the expected NLL/p-value may be used. For instance, adding the Asimov significance \cite{cowan}(Equation 97) of each bin in quadrature is another reasonable approach.
 
+\FloatBarrier
 \section{Applications in High Energy Physics}
 \label{app}
 The standard model of particle physics is an incredibly successful theory, correctly describing all known 
@@ -162,35 +166,41 @@ Higgs boson decays to muons and bottom quarks are of particular importance as th
 
 The autocategorizer algorithm has been used at the CMS experiment to set limits on the Higgs boson's rate of decay to two muons \cite{cmshiggsmumu2017} and to two b-quarks \cite{VHbbCitation}. In the $H\rightarrow\mu\mu$ analysis, the autocategorizer improves the expected upper limit on the rate of decay by 13\% compared to human expert categorization. The improvement is equivalent to collecting 27\% more data. 
 
-In the comparison, the human expert categorization of the previous $H\rightarrow\mu\mu$ analysis \cite{cmshiggsmumu2012} is reoptimized for the $\sqrt{s} = 13 TeV$ collisions of run 2, resulting in the expert categorization of Figure \ref{fig:hxcats}. The expert categorization serves as a baseline for comparison. Detailed information on the features can be found in the paper.
-\begin{figure}[hbp]
+In the comparison, the human expert categorization of the previous $H\rightarrow\mu\mu$ analysis \cite{cmshiggsmumu2012} is reoptimized for the $\sqrt{s} = 13 TeV$ collisions of run 2, resulting in the expert categorization of Figure \ref{fig:hxcats}. The expert categorization serves as a baseline for comparison. Detailed information on the features can be found in the paper. 
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.98\linewidth]{run1categories.png}
   \caption
   {The human expert categories used as the baseline. B is short for $|\eta(\mu)| < 0.8$. O is short for $0.8 < |\eta(\mu)| < 1.6$ . E is short for $|\eta(\mu)| > 0.8$. These are the barrel, overlap, and endcap regions of the CMS detector. BB requires that both muons are in the barrel, BO requires that one muon is in the barrel and the other is in the overlap, etc.}
   \label{fig:hxcats}
 \end{figure}
-Running the autocategorizer with the same set of features considered in the 2012 analysis, produces the categories of Figure \ref{fig:autocats}. Histograms of the dimuon mass ($m_{\mu\mu}$) in the different categories are used simultaneously to evaluate the expected upper limit. The SM predictions of $m_{\mu\mu}$ provide the expected hypothesis, while the model for no $H\rightarrow\mu\mu$ decay provides the null.
-\begin{figure}[hbp]
+The 2J VBF Tight, 01J Tight BB, and 01J Tight BO are the three most sensitive categories (listed from most sensitive to least sensitive). Note that 2J VBF Tight has large $m(j_1j_2)$ and $|\Delta\eta(j_1j_2)|$ while the 01J Tight BB/BO have low muon $|\eta|$ and high $p_t(\mu\mu)$. 
+\FloatBarrier
+Running the autocategorizer with the same set of features considered in the 2012 analysis, produces the categories of Figure \ref{fig:autocats}. Histograms of the dimuon mass ($m_{\mu\mu}$) in the different categories are used simultaneously to evaluate the expected upper limit. The SM predictions of $m_{\mu\mu}$ provide the expected hypothesis, while the model for no $H\rightarrow\mu\mu$ decay provides the null. 
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.98\linewidth]{autocat_categories.png}
   \caption
   {The autocategorizer categories using the same features as the baseline human expert categories. These categories provide a 13\% improvement to the upper limit compared to the baseline.}
   \label{fig:autocats}
 \end{figure}
+The categories are numbered from least sensitive to most sensitive with c0 the least sensitive and c15 the most sensitive. Note that c15 has large $m(j_1j_2)$ and $|\Delta\eta(j_1j_2)|$ modeling the 2J VBF Tight category from the set of human expert categories. In addition, c15 requires low MET and no b-jets to remove $t\bar{t}$ background, and high $p_t(\mu\mu)$.
+c14, c13, and c12 model the 01J Tight BB/BO categories with low muon $|\eta|$ and high $p_t(\mu\mu)$. Additional requirements of zero b-jets and low MET remove $t\bar{t}$ background. 
+\FloatBarrier
 
 Not only does the autocategorizer improve the upper limit by 13\%, the algorithm also discovers that the previous $H\rightarrow\mu\mu$ analysis overlooked the importance of b-tagging. To quantify the contribution of the b-tagging discovery, the autocategorizer was rerun without b-tagging in the feature set, yielding only 10\% improvement. The test implies that the b-tagging discovery accounts for 23\% of the improvement. 
 
 Categorizing on standard features is only one option. Categorizing on the output score of some machine learning classifier is another. Autocategorizing on the score from a Boosted Decision Tree (BDT) classifier and muon $\eta$ info results in a 23\% improvement in the upper limit and the categories of Figure $\ref{fig:final_categories}$. The improvement is equivalent to 51\% more data. The input features to the BDT can be found in the paper.
-\begin{figure}[hbp]
+\begin{figure}[h!]
   \centering
   \includegraphics[width=0.98\linewidth]{final_categories_symb-eta.png}
   \caption
   {The autocategorizer categories using the BDT score and the pseudorapidity info of the two muons. Note that $|\eta| = max(|\eta(\mu_1)|,|\eta(\mu_2)|)$. These categories lead to a 23\% improvement to the upper limit compared to the baseline.}
   \label{fig:final_categories}
 \end{figure}
+\FloatBarrier
 
-The autocategorizer was also used in the $H\rightarrow bb$ CMS analysis to develop a mass analysis. In this case, the autocategorizer was set to maximize the sensitivity metric on $m_{bb}$ by creating categories on the BDT score. Creating categories out of the BDT scoreallows the analysis to use the power of a machine learning classifier while retaining the interpretability of the mass histograms. Moreover, the mass analysis was able to match the expected p-value of the $H\rightarrow bb$ analysis that used the BDT score distributions as the null and expected hypotheses (as opposed to null and expected mass histograms in categories of BDT score). 
+In the $H\rightarrow bb$ CMS analysis the autocategorizer was used to develop a mass analysis. In this case, the autocategorizer was set to maximize the sensitivity metric on $m_{bb}$ by creating categories on the BDT score. Creating categories out of the BDT score allows the analysis to use the power of a machine learning classifier while retaining the interpretability of the mass histograms. Moreover, the mass analysis was able to match the expected p-value of the $H\rightarrow bb$ analysis that used the BDT score distributions as the null and expected hypotheses (as opposed to null and expected mass histograms in categories of BDT score). 
 
 %A detailed description of the CMS detector can be found in \cite{cms}. 
 
@@ -203,6 +213,7 @@ The autocategorizer was also used in the $H\rightarrow bb$ CMS analysis to devel
 %A more detailed description of the CMS detector, together with a definition of the coordinate
 %system used and the relevant kinematic variables, can be found in \cite{h2mu-paper-22}.
 
+\FloatBarrier
 \section{Conclusions}
 \label{conc}
 %The autocategorizer algorithm automatically maximizes the chance to discover an effect of interest by extracting an optimal ensemble of sensitive regions (called categories) from a multidimensional feature space. 
