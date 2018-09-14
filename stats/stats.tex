@@ -95,7 +95,7 @@ Expanding about the minimum, $\hat{\mu}$, provides an estimate of $\sigma$ and h
 \begin{equation}
 N_{LL}(\hat{\mu}) + 0(x-\hat{\mu}) + \frac{1}{2}N_{LL}''(\hat{\mu})(x-\hat{\mu})^2 = -ln[A] + \frac{(x-\hat{\mu})^2}{2\sigma^2} \rightarrow \sigma^2 = \frac{1}{N_{LL}''(\hat{\mu})}.
 \end{equation}
-Note that $\sigma$ may be determined by moving x away from the minimum until $\Delta N_{LL} = 1$. The $\Delta N_{LL} = 1$ method is sometimes used as an estimate of the uncertainty even when the likelihood is not Gaussian. In some cases the PDF may be multidimensional, and in those cases, $\sigma^2$ is the covariance matrix with $\partial_{\theta_i}\partial_{\theta_j}N_{LL}(\hat{\theta}) = (\sigma^2)^{-1}_{ij}$. Multidimensional or otherwise, $\sigma$ can be used to estimate the uncertainty on the best fit values. 
+Note that $\sigma$ may be determined by moving x away from the minimum until $\Delta N_{LL} = \frac{1}{2}$. The $\Delta N_{LL} = \frac{1}{2}$ method is sometimes used as an estimate of the uncertainty even when the likelihood is not Gaussian. In some cases, the PDF may be multidimensional, and in those cases, $\sigma^2$ is the covariance matrix with $\partial_{\theta_i}\partial_{\theta_j}N_{LL}(\hat{\theta}) = (\sigma^2)^{-1}_{ij}$. Multidimensional or otherwise, $\sigma$ can be used to estimate the uncertainty on the best fit values. 
 
 \subsection{Sensitivity}
 
