@@ -30,11 +30,11 @@
 
 \section{Introduction}
 
-This document outlines the Boosted Decision Tree (BDT) machine learning algorithm. The text here was originally written as part of a larger document for a project during my PhD at the Large Hadron Collider. I extracted the relevant BDT info and put it into this document in case people might find it useful. 
+This document outlines the Boosted Decision Tree (BDT) machine learning algorithm. The text starts with a cursory summary of the full BDT algorithm. After presenting the big picture, the text starts by explaining the decision tree algorithm. After discussing the DT algorithm, the notes move through a concrete example step by step and then provide pseudocode for the DT algorithm.  The document then moves on to explain boosting and later presents pseudocode for the full BDT algorithm. This text was originally written as part of a larger document for a project during my PhD at the Large Hadron Collider. I extracted the relevant BDT info and put it into this document in case people might find it useful.
 
 \section{Boosted Decision Trees}
 
-Let's get to it. The BDT algorithm is a supervised machine learning algorithm: it learns from a set of data with known answers in order to predict data with unknown answers. The algorithm creates a forest, which is a collection of trees. The forest starts with a single tree, which chops up the feature space into discrete regions, fitting constants in each as to minimize the total error between between the true values and the predicted values of the tree. The function defining the net error is called the loss function. If the predictions by the tree are general enough the events (data points) will be off by some amount, i.e. the predicted values will still differ from the true values. Since the events are still off, the algorithm will add another tree attempting to correct the predictions of the last tree to further reduce the error. The algorithm will continue to add trees further correcting the predictions and minimizing the error until it reaches the maximum number of trees, a hyperparmeter set by the user.
+Let's get to it. The BDT algorithm is a supervised machine learning algorithm: it learns from a set of data with known answers in order to predict data with unknown answers. The algorithm creates a forest, which is a collection of trees. The forest starts with a single tree, which chops up the feature space into discrete regions, fitting constants in each as to minimize the total error between between the true values and the predicted values of the tree. The function defining the net error is called the loss function. If the predictions by the tree are general enough, the events (data points) will be off by some amount, i.e. the predicted values will differ from the true values. Since the events are still off, the algorithm will add another tree attempting to correct the predictions of the last tree to further reduce the error. The algorithm will continue to add trees further correcting the predictions and minimizing the error until it reaches the maximum number of trees, a hyperparmeter set by the user. 
 
 \subsection{A Single Decision Tree}
 
@@ -114,8 +114,7 @@ node                 |  tree
   loss_function      |
 
 node::fitAndCalcOptimumSplit(loss_function)
-# General outlining the necessary steps to calculate
-# the best split value, feature, and error reduction
+# Calculate the best split value, split feature, and error reduction
 # for the node
 
   bestSplitValue = 0
@@ -278,9 +277,9 @@ LossFunctionBDT is the interface. All of the methods require implementation when
 \begin{verbatim}
 class LossFunctionBDT
   virtual Init(events)                  # initialize the loss function
-  virtual SetTargets(events)            # set targets for collection of events
+  virtual SetTargets(events)            # set targets for events
   virtual Target(event)                 # set target for one event
-  virtual Fit(events)                   # set fit for collection of events in a node
+  virtual Fit(events)                   # set fit for events in a node
 \end{verbatim}
 
 \subsubsection{LeastSquaresLossFunctionBDT}
