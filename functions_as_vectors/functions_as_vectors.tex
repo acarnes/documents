@@ -1,0 +1,69 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{braket}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage[font={small,it}]{caption}
+\usepackage{float}
+\usepackage{setspace}
+
+\hypersetup{
+  colorlinks   = true,  %Colours links instead of ugly boxes
+  urlcolor     = blue,  %Colour for external hyperlinks
+  linkcolor    = black, %Colour of internal links
+  citecolor   =  blue   %Colour of citations
+}
+
+\begin{document}
+\title{Functions, Vectors, Operators, Matrices, and Green Functions}
+\author{Andrew Carnes}
+
+\maketitle
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction} \label{intro}
+
+This document looks at functions as vectors and reinterprets derivatives, Green functions, and the Dirac delta function as matrices. We also look at dot products, integrals, and transformations (like the Fourier transform) in this formalism. We find that the Green function for a differential operator is the inverse matrix of that differential operator. Looking at Green functions this way really helped me with electromagnetism and QFT in graduate school. Plus it's pretty cool. Nothing here is super rigorous, but it gets the point across and provides a new way to look at things.
+
+\section{Functions As Vectors}  
+
+What is a vector? A vector $\vec{v}$ is an ordered 1D storage device. A vector of length N has N bins to put numbers in, and you keep track of the bins by labeling them with an integer. Note that you can only put one number in each bin. If we label the bins with i, $v_i$ is the information in the i$^{th}$ bin. $\vec{v}$ usually written like so, 
+
+\begin{equation}
+\vec{v} = 
+\begin{pmatrix}
+v_1 \\
+v_2 \\
+... \\
+v_N \\
+\end{pmatrix}.
+\end{equation}
+Now consider a function. A function f(x) is an ordered 1D storage device with a bunch of bins. The bins are labeled by x, and f(x) is the number in the x$^{th}$ bin. Each bin only has one number. In this case, x is a real number so f(x) is much more dense than $\vec{v}$. f(x) can be written like so,  
+\begin{equation}
+f(x) = 
+\begin{pmatrix}
+f(-\infty) \\
+... \\
+f(-3.11111111128) \\
+... \\
+f(-3.1111111112) \\
+... \\
+f(0) \\
+... \\
+f(912.99) \\
+... \\
+f(999999999) \\
+... \\
+f(\infty) \\
+\end{pmatrix}.
+\end{equation}
+Between any two bins there are an infinite number of bins (welcome to the real numbers), which makes things tricky, but aside from the storage density, functions and vectors work the same way. Give them a location and they spit out the info you want. 
+
+% consider talking about plotting vectors vs functions. vectors as arrows, functions as arrows or vectors as plots.
+\end{document}
