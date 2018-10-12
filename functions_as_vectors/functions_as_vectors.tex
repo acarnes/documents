@@ -65,5 +65,55 @@ f(\infty) \\
 \end{equation}
 Between any two bins there are an infinite number of bins (welcome to the real numbers), which makes things tricky, but aside from the storage density, functions and vectors work the same way. Give them a location and they spit out the info you want. 
 
+Let's discretize the real number line into chunks of width dx. We can then label the entries in f(x) by f($x_i$), where $x_{i+1} - x_i = dx$. Then we have  
+\begin{equation}
+f(x) = 
+\begin{pmatrix}
+f(x_{-\infty}) \\
+... \\
+... \\
+f(x_{-2}) \\
+... \\
+f(x_{-1}) \\
+... \\
+f(x_0) \\
+... \\
+f(x_1) \\
+... \\
+f(x_2) \\
+... \\
+... \\
+f(x{\infty}) \\
+\end{pmatrix}.
+\end{equation}
+Now let's take dot products. With two vectors, $\vec{v}$ and $\vec{u}$, the dot product is 
+\begin{equation}
+\vec{v} \cdot \vec{u} = v_1 u_1 + v_2 u_2 + ... v_N u_N = \sum_{i=1}^{N} v_i u_i.
+\end{equation}
+As usual, when $\vec{v} \cdot \vec{u} = 0$ the vectors are orthogonal, and when $\frac{\vec{v} \cdot \vec{u}}{\sqrt{v^2u^2}} = 0$ the vectors are parallel. Moreover, when all $v_i$ and $u_i$ are 1, $\vec{v} \cdot \vec{u} = N$, the total number of components. If we consider only a subset of components with all $v_i = u_i = 1$ then $\sum_{i=1}^{N_c} v_i u_i = N_c$, the number of components summed over. 
+
+Now take a dot product of functions f(x) and g(x), 
+\begin{equation}
+f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2}) + ... + f(x_{-1})g(x_{-1}) + 
+... + f(x_0)g(x_0) + ... + f(x_1)g(x_1) + ... + f(x_2)g(x_2) + ...
+\end{equation}
+Let's look at the sum from $x_1$ to $x_{2}$ when f(x) = g(x) = 1 in all bins 
+\begin{equation}
+f(x) \cdot g(x) = f(x_1)g(x_1) + ... + ... \text{up to} f(x_2)g(x_2) = 1 + ... + 1 = N_c.
+\end{equation}
+This gives us the number of components summed over, $N_c$, which is infinite. That's true, but it's not a helpful normalization. Let's redefine the dot product between functions to yield the size of the real interval summed over, $x_2 - x_1 = dx$. 
+\begin{equation}
+f(x) \cdot g(x) = f(x_1)g(x_1)\epsilon + ... + ... \text{up to} f(x_2)g(x_2) = 1\epsilon + ... + 1\epsilon = N_c\epsilon = dx.
+\end{equation}
+The full dot product is now
+\begin{equation}
+f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2})\epsilon + ... + f(x_{-1})g(x_{-1})\epsilon + 
+... + f(x_0)g(x_0)\epsilon + ... + f(x_1)g(x_1)\epsilon + ... + f(x_2)g(x_2)\epsilon + ...
+\end{equation}
+Finally, let's represent all $N_c$ terms between f($x_i$)g($x_i$) and f($x_{i+1}$)g($x_{i+1}$) by f($x_i$)g($x_i$) using the assumption that f(x) and g(x) change very little throughout the interval dx. This yields 
+\begin{equation}
+f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2})N_c\epsilon + f(x_{-1})g(x_{-1})N_c\epsilon + f(x_0)g(x_0)N_c\epsilon + 
+f(x_1)g(x_1)N_c\epsilon + f(x_2)g(x_2)N_c\epsilon + ... = \sum_{i=-\infty}^{\infty} f(x_i)g(x_i) dx.
+\end{equation}
 % consider talking about plotting vectors vs functions. vectors as arrows, functions as arrows or vectors as plots.
 \end{document}
