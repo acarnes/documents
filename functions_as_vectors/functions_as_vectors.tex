@@ -27,11 +27,13 @@
 \tableofcontents
 \newpage
 
-\section{Introduction} \label{intro}
+%%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{INTRODUCTION} \label{intro}
 
 This document looks at functions as vectors and reinterprets derivatives, Green functions, and the Dirac delta function as matrices. We also look at dot products, integrals, and transformations (like the Fourier transform) in this formalism. We find that the Green function for a differential operator is the inverse matrix of that differential operator. Looking at Green functions this way really helped me with electromagnetism and QFT in graduate school. Plus it's pretty cool. Nothing here is super rigorous, but it gets the point across and provides a new way to look at things.
 
-\section{Functions As Vectors}  
+%%%%%%%%%%%%%%%%%%%% FUNCTIONS AS VECTORS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{FUNCTIONS AS VECTORS}  
 
 What is a vector? A vector $\vec{v}$ is an ordered 1D storage device. A vector of length N has N bins to put numbers in, and you keep track of the bins by labeling them with an integer. Note that you can only put one number in each bin. If we label the bins with i, $v_i$ is the information in the i$^{th}$ bin. $\vec{v}$ usually written like so, 
 
@@ -86,7 +88,7 @@ f(x_2) \\
 f(x{\infty}) \\
 \end{pmatrix}.
 \end{equation}
-Now let's take dot products. With two vectors, $\vec{v}$ and $\vec{u}$, the dot product is 
+Note that there are still an infinite number of entries between f($x_i$) and f($x_{i+1}$). Now let's take dot products. With two vectors, $\vec{v}$ and $\vec{u}$, the dot product is 
 \begin{equation}
 \vec{v} \cdot \vec{u} = v_1 u_1 + v_2 u_2 + ... v_N u_N = \sum_{i=1}^{N} v_i u_i.
 \end{equation}
@@ -94,26 +96,171 @@ As usual, when $\vec{v} \cdot \vec{u} = 0$ the vectors are orthogonal, and when 
 
 Now take a dot product of functions f(x) and g(x), 
 \begin{equation}
-f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2}) + ... + f(x_{-1})g(x_{-1}) + 
-... + f(x_0)g(x_0) + ... + f(x_1)g(x_1) + ... + f(x_2)g(x_2) + ...
+\begin{split}
+f(x) \cdot g(x) = & ... + f(x_{-2})g(x_{-2}) + ... + f(x_{-1})g(x_{-1}) \\ 
+&+ ... + f(x_0)g(x_0) + ... + f(x_1)g(x_1) + ... + f(x_2)g(x_2) + ...
+\end{split}
 \end{equation}
 Let's look at the sum from $x_1$ to $x_{2}$ when f(x) = g(x) = 1 in all bins 
 \begin{equation}
-f(x) \cdot g(x) = f(x_1)g(x_1) + ... + ... \text{up to} f(x_2)g(x_2) = 1 + ... + 1 = N_c.
+f(x) \cdot g(x) = f(x_1)g(x_1) + ... + ... \text{ (up to } f(x_2)g(x_2)) = 1 + 1 + ... + 1 = N_c.
 \end{equation}
 This gives us the number of components summed over, $N_c$, which is infinite. That's true, but it's not a helpful normalization. Let's redefine the dot product between functions to yield the size of the real interval summed over, $x_2 - x_1 = dx$. 
 \begin{equation}
-f(x) \cdot g(x) = f(x_1)g(x_1)\epsilon + ... + ... \text{up to} f(x_2)g(x_2) = 1\epsilon + ... + 1\epsilon = N_c\epsilon = dx.
+\begin{split}
+f(x) \cdot g(x) &= f(x_1)g(x_1)\epsilon + ... + ... \text{ (up to } f(x_2)g(x_2)) \\ 
+& = 1\epsilon + ... + 1\epsilon = N_c\epsilon = dx.
+\end{split}
 \end{equation}
 The full dot product is now
 \begin{equation}
-f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2})\epsilon + ... + f(x_{-1})g(x_{-1})\epsilon + 
-... + f(x_0)g(x_0)\epsilon + ... + f(x_1)g(x_1)\epsilon + ... + f(x_2)g(x_2)\epsilon + ...
+\begin{split}
+f(x) \cdot g(x) = &... + f(x_{-2})g(x_{-2})\epsilon + ... + f(x_{-1})g(x_{-1})\epsilon \\ 
+&+ ... + f(x_0)g(x_0)\epsilon + ... + f(x_1)g(x_1)\epsilon + ... + f(x_2)g(x_2)\epsilon + ...
+\end{split}
 \end{equation}
 Finally, let's represent all $N_c$ terms between f($x_i$)g($x_i$) and f($x_{i+1}$)g($x_{i+1}$) by f($x_i$)g($x_i$) using the assumption that f(x) and g(x) change very little throughout the interval dx. This yields 
 \begin{equation}
-f(x) \cdot g(x) = ... + f(x_{-2})g(x_{-2})N_c\epsilon + f(x_{-1})g(x_{-1})N_c\epsilon + f(x_0)g(x_0)N_c\epsilon + 
-f(x_1)g(x_1)N_c\epsilon + f(x_2)g(x_2)N_c\epsilon + ... = \sum_{i=-\infty}^{\infty} f(x_i)g(x_i) dx.
+\begin{split}
+f(x) \cdot g(x) &= ... + f(x_{-2})g(x_{-2})N_c\epsilon + f(x_{-1})g(x_{-1})N_c\epsilon + f(x_0)g(x_0)N_c\epsilon \\ 
+&+ f(x_1)g(x_1)N_c\epsilon + f(x_2)g(x_2)N_c\epsilon + ... \\ 
+\end{split}
 \end{equation}
+Remembering that $N_c\epsilon = dx$, we get
+\begin{equation}
+f(x) \cdot g(x) = \sum_{i=-\infty}^{\infty} f(x_i)g(x_i) dx = \int_{-\infty}^{\infty} f(x)g(x)dx.
+\end{equation}
+When $f(x) \cdot g(x) = 0$, two functions are orthogonal.
 % consider talking about plotting vectors vs functions. vectors as arrows, functions as arrows or vectors as plots.
+
+
+%%%%%%%%%%%%%%%%%%%% DISCRETIZING LINEAR TRANSFORMATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{DISCRETIZING LINEAR TRANSFORMATIONS}  
+
+%%%%%%%%%%%%%%%%%%%% MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Continuous Linear Transformations as Matrices}
+A matrix transforms a vector into another vector. Consider a rotation,
+\begin{equation}
+R\vec{v} = 
+\begin{pmatrix}
+cos\theta  & sin\theta \\
+-sin\theta & cos\theta \\
+\end{pmatrix}
+\begin{pmatrix}
+v_1 \\
+v_2 \\
+\end{pmatrix}
+= 
+\begin{pmatrix}
+v_1cos\theta  + v_2sin\theta \\
+-v_1sin\theta + v_2cos\theta \\
+\end{pmatrix}
+= \vec{v'}
+\end{equation}
+The vector $\vec{v'}$ is still a vector, it's just $\vec{v}$ rotated by $\theta$. We can write the matrix multiplication in summation form like so $v'_i = \sum_j R_{ij}v_j$. We can also write the transformation in terms of dot products $v'_i = \vec{R_i} \cdot \vec{v}$. 
+
+We can use the dot product form to extend this to functions, $g(x) = K(x) \cdot f$. Writing out the dot product in terms of an integral yields $\int K(x,y)f(y)dy$. Integrating f(y) against the 2D function K(x,y) performs the matrix multiplication yielding the new function g(x). Let's write $Kf = g$ to represent this operation. Imagine the discretized matrix multiplication,
+\begin{equation}
+\begin{pmatrix}
+K(y_1,x_1) & K(y_1, x_2) & ... & K(y_1, x_N) \\
+K(y_2,x_1) & K(y_2, x_2) & ... & K(y_2, x_N) \\
+... & ... & ... & ... \\
+K(y_N,x_1) & K(y_N, x_2) & ... & K(y_N, x_N) \\
+\end{pmatrix}
+\begin{pmatrix}
+f(x_1) \\
+f(x_2) \\
+... \\ 
+f(x_N) \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+K(y_1,x_1)f(x_1)dx + K(y_1, x_2)f(x_2)dx + ... + K(y_1, x_N)f(x_N) \\
+K(y_2,x_1)f(x_1)dx + K(y_2, x_2)f(x_2)dx + ... + K(y_2, x_N)f(x_N) \\
+... + ... + ... + ... \\
+K(y_N,x_1)f(x_1)dx + K(y_N, x_2)f(x_2)dx + ... + K(y_N, x_N)f(x_N) \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+g(y_1) \\
+g(y_2) \\
+...    \\
+g(y_N) \\
+\end{pmatrix}.
+\end{equation}
+An example is the Fourier transform,
+\begin{equation}
+F(k,x)f(x) = \frac{1}{2\pi}\int e^{-ikx}f(x)dx = g(k). 
+\end{equation} 
+
+%%%%%%%%%%%%%%%%%%%% DERIVATIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The Derivative As A Matrix}
+The derivative also transforms a function into a different function, $\frac{d}{dx}f(x) = \frac{f(x+dx) - f(x)}{dx} = f'(x)$. Let's write $\frac{d}{dx}f(x)$ as a matrix multiplication $Df = \int D(y,x)f(x) = g(y)$,
+\begin{equation}
+\begin{split}
+Df &= \frac{1}{dxdx} 
+\begin{pmatrix}
+... & ... & ... & ... & ... & ... & ... & ... \\
+... & -1 & 1 & 0 & 0 & 0 & 0 & ...\\
+... & 0 & -1 & 1 & 0 & 0 & 0 & ... \\
+... & 0 & 0 & -1 & 1 & 0 & 0 & ... \\
+... & 0 & 0 & 0 & -1 & 1 & 0 & ... \\
+... & ... & ... & ... & ... & ... & ... & ... \\
+\end{pmatrix}
+\begin{pmatrix}
+... \\
+f(x_i) \\
+f(x_{i+1}) \\
+f(x_{i+2}) \\
+f(x_{i+3}) \\
+f(x_{i+4}) \\
+f(x_{i+5}) \\
+... \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+... \\
+\frac{-f(x_i) + f(x_{i+1})}{dxdx}dx \\
+\frac{-f(x_{i+1}) + f(x_{i+2})}{dxdx}dx \\
+\frac{-f(x_{i+2}) + f(x_{i+3})}{dxdx}dx \\
+\frac{-f(x_{i+3}) + f(x_{i+4})}{dxdx}dx \\
+\frac{-f(x_{i+4}) + f(x_{i+5})}{dxdx}dx \\
+\frac{-f(x_{i+5}) + f(x_{i+6})}{dxdx}dx \\
+... \\
+\end{pmatrix}\\
+&=
+\begin{pmatrix}
+... \\
+\frac{f(x_{i+1}) - f(x_i) }{dx} \\
+\frac{f(x_{i+2}) - f(x_{i+1})}{dx} \\
+\frac{f(x_{i+3}) - f(x_{i+2})}{dx} \\
+\frac{f(x_{i+4}) - f(x_{i+3})}{dx} \\
+\frac{f(x_{i+5}) - f(x_{i+4})}{dx} \\
+\frac{f(x_{i+6}) - f(x_{i+5})}{dx} \\
+... \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+... \\
+g(y_i) \\
+g(y_{i+1}) \\
+g(y_{i+2}) \\
+g(y_{i+3}) \\
+g(y_{i+4}) \\
+g(y_{i+6}) \\
+... \\
+\end{pmatrix}
+\end{split}
+\end{equation}
+Note that an integral multiplies by a factor of dx, and a derivative divides by dx. We need $\frac{d}{dx}f = \int D(y,x)f(x)dx$ with dimensions like $\frac{1}{dx} \sim D dx$; therefore, $D \sim \frac{1}{dxdx}$. 
+
+%%%%%%%%%%%%%%%%%%%% THE FUNDAMENTAL THEOREM OF CALCULUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The Fundamental Theorem of Calculus}
+
+%%%%%%%%%%%%%%%%%%%% GREEN FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{GREEN FUNCTIONS}
+\subsection{Solving A Linear Algebra Problem}
+\subsection{The Green Function: The Inverse Of A Differential Operator}
+
+%%%%%%%%%%%%%%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
