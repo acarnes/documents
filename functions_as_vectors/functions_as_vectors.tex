@@ -257,9 +257,104 @@ Note that an integral multiplies by a factor of dx, and a derivative divides by 
 %%%%%%%%%%%%%%%%%%%% THE FUNDAMENTAL THEOREM OF CALCULUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{The Fundamental Theorem of Calculus}
 
+What happens if we integrate $\frac{d}{dx}f(x)$?
+
+\begin{equation}
+\begin{split}
+\int_a^b f'(x)dx &= 1 \cdot f'(x) = 
+dx
+\begin{pmatrix}
+... & 1 & 1 & 1 & 1 & 1 & 1 & ... 
+\end{pmatrix}
+\begin{pmatrix}
+... \\
+\frac{f(x_{i+1}) - f(x_i) }{dx} \\
+\frac{f(x_{i+2}) - f(x_{i+1})}{dx} \\
+\frac{f(x_{i+3}) - f(x_{i+2})}{dx} \\
+\frac{f(x_{i+4}) - f(x_{i+3})}{dx} \\
+\frac{f(x_{i+5}) - f(x_{i+4})}{dx} \\
+\frac{f(x_{i+6}) - f(x_{i+5})}{dx} \\
+... \\
+\end{pmatrix}\\
+&= f(b) + ... + f(x_{i+6}) - f(x_{i+5}) + f(x_{i+5}) - f(x_{i+4}) + f(x_{i+4}) - f(x_{i+3}) + ... - f(a) \\ 
+&= f(b) - f(a) 
+\end{split}
+\end{equation}
+Boom! The fundamental theorem of calculus. 
+
 %%%%%%%%%%%%%%%%%%%% GREEN FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{GREEN FUNCTIONS}
 \subsection{Solving A Linear Algebra Problem}
+With a linear algebra problem like $M\vec{v} = \vec{b}$, we can solve for $\vec{v}$ by finding $M^{-1}$. With $M^{-1}$ in hand, $\vec{v} = M^{-1}\vec{b}$. Problem solved. But how do we find $M^{-1}$? Well, $M^{-1}$ is easy to find when $M$ is diagonal. Let's go to the bar basis where M is diagonal.
+
+\begin{equation}
+\label{minv}
+\begin{split}
+\bar{M}^{-1}\bar{M} &= 1 = 
+\begin{pmatrix}
+... & ... & ... & ... & ... \\
+... & 1/m_i & 0 & 0 & ... \\
+... & 0 & 1/m_{i+1} & 0 & ... \\
+... & 0 & 0 & 1/m_{i+2} & ... \\
+... & ... & ... & ... & ... \\
+\end{pmatrix}
+\begin{pmatrix}
+... & ... & ... & ... & ... \\
+... & m_i & 0 & 0 & ... \\
+... & 0 & m_{i+1} & 0 & ... \\
+... & 0 & 0 & m_{i+2} & ... \\
+... & ... & ... & ... & ... \\
+\end{pmatrix} \\
+&\rightarrow \bar{M}^{-1} =  
+\begin{pmatrix}
+... & ... & ... & ... & ... \\
+... & 1/m_i & 0 & 0 & ... \\
+... & 0 & 1/m_{i+1} & 0 & ... \\
+... & 0 & 0 & 1/m_{i+2} & ... \\
+... & ... & ... & ... & ... \\
+\end{pmatrix}
+\end{split}
+\end{equation}
+In the bar basis, $\bar{M}$ consists of its eigenvalues along the diagonal, and $\bar{M}^{-1}$ is just one over the eigenvalues along the diagonal. The equation to solve becomes $\vec{\bar{v}} = \bar{M}^{-1}\vec{\bar{b}}$. If we assume there is some transformation matrix T that transforms the non-bar basis to the bar basis, then $T\vec{v} = \bar{M}^{-1}T\vec{b}$ and $\vec{v} = T^{-1}\bar{M}^{-1}T\vec{b}$. Finally, 
+\begin{equation}
+M^{-1} = T^{-1}\bar{M}^{-1}T.   
+\end{equation}
+Almost there, we still have to find $T$ and $T^{-1}$! $\vec{\bar{m}}_{i}$, the eigenvector in the bar basis corresponding to eigenvalue $m_i$, is just $\begin{pmatrix}... & 0 & 1 & 0 ... \end{pmatrix}$, where the 1 is in the $i^{th}$ position. $T^{-1}$ converts from the bar basis to the non-bar basis and should convert $\vec{\bar{m}}_{i}$ to $\vec{m}_{i}$. This holds for all eigenvectors. Naturally,
+\begin{equation}
+\label{tinv}
+T^{-1}\vec{\bar{m}}_{i} = \vec{m}_{i} \rightarrow T^{-1} = 
+\left( \begin{array}{c|c|c|c|c|c}
+   \vec{m}_1 & \vec{m}_2 & ... & \vec{m}_i & ... & \vec{m}_N 
+\end{array}\right)
+\end{equation} 
+Note that $\vec{m}_i$ defines the entire $i^{th}$ column of the $T^{-1}$ matrix. Checking this,
+\begin{equation}
+T^{-1}\vec{\bar{m}}_{i} = 
+\left( \begin{array}{c|c|c|c|c|c}
+   \vec{m}_1 & \vec{m}_2 & ... & \vec{m}_i & ... & \vec{m}_N 
+\end{array}\right)
+\begin{pmatrix}
+0 \\ 0 \\ ... \\ 1 \\ ... \\ 0 \\ 
+\end{pmatrix}
+= 0\vec{v}_{1} + 0 \vec{v}_{2} + ... + \vec{v}_{i} + ... + 0\vec{v}_{N} = \vec{v}_{i}.
+\end{equation} 
+Our transformation consists of orthonormal eigenvectors which implies that $T^{\dagger}T = 1$. Note that $\dagger$ represents the Hermitian conjugate. 
+\begin{equation}
+T^{\dagger}T =  
+\begin{pmatrix}
+\vec{v}_1^\dagger \vec{v}_1 & \vec{v}_1^\dagger \vec{v}_2 & ... & \vec{v}_1^\dagger \vec{v}_N \\
+\vec{v}_2^\dagger \vec{v}_1 & \vec{v}_2^\dagger \vec{v}_2 & ... & \vec{v}_2^\dagger \vec{v}_N \\
+... & ... & ... & ... \\
+\vec{v}_N^\dagger \vec{v}_1 & \vec{v}_N^\dagger \vec{v}_2 & ... & \vec{v}_N^\dagger \vec{v}_N \\
+\end{pmatrix}
+= 1
+\end{equation}
+$T^{\dagger}T = 1$ further implies that $T^{-1} = T^{\dagger}$ and $T = T^{-1\dagger}$. We now have the entire solution in hand. $M^{-1} = T^{\dagger}\bar{M}T$ with $\bar{M}$ given by one over the eigenvalues of $M$ (Equation \ref{minv}) and $T^{-1} = T^\dagger$ given by the eigenvectors of $M$ (Equation \ref{tinv}).
+
+Here's an example to solidify things. 
+
+DO A SIMPLE 2x2 EXAMPLE
+
 \subsection{The Green Function: The Inverse Of A Differential Operator}
 
 %%%%%%%%%%%%%%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
