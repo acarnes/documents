@@ -18,7 +18,7 @@
 }
 
 \begin{document}
-\title{Functions, Vectors, Operators, Matrices, and Green Functions}
+\title{Green Functions: The Bridge Between Linear Algebra and Differential Equations}
 \author{Andrew Carnes}
 
 \maketitle
@@ -30,12 +30,16 @@
 %%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION} \label{intro}
 
-This document looks at functions as vectors and reinterprets derivatives, Green functions, and the Dirac delta function as matrices. We also look at dot products, integrals, and transformations (like the Fourier transform) in this formalism. We find that the Green function for a differential operator is the inverse matrix of that differential operator. Looking at Green functions this way really helped me with electromagnetism and QFT in graduate school. Plus it's pretty cool. Nothing here is super rigorous, but it gets the point across and provides a new way to look at things.
+This document is a real adventure. We look at functions as vectors and reinterpret derivatives as matrices. By viewing derivatives as matrices, we can view differential equations as linear algebra problems and use the techniques from linear algebra to solve differential equations (Diff EQ). The note starts by extrapolating dot products from vectors to functions, then uses dot products to develop matrix multiplication on functions, and then uses the matrix on function action to make the connection between linear algebra and Diff EQ. Looking at Diff EQ in this light, we find that the Green function is the inverse of a differential operator. 
+
+To provide some initial insight, consider the linear algebra problem $Mv=b$ with the matrix $M$ and the vectors $v$ and $b$. Finding $M^{-1}$ solves for $v$ via $v=M^{-1}b$. In the same way, the Green function $G=D^{-1}$ solves the differential equation $Df=g$ via $\int G(x,y)g(y)dy = f(x)$. The journey from vectors to functions and linear algebra to Diff EQ provides some intersting insight into some unsuspecting places like the Dirac delta function, the fundamental theorem of calculus, and Fourier transforms. 
+
+Looking at Green functions this way finally made them click and helped me a bunch with electromagnetism and quantum field theory in graduate school. Nothing here is super rigorous, but it gets the point across and provides a new way to look at some familiar things. Anywho, let's get on with the adventure.
 
 %%%%%%%%%%%%%%%%%%%% FUNCTIONS AS VECTORS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{FUNCTIONS AS VECTORS}  
 
-What is a vector? A vector $\vec{v}$ is an ordered 1D storage device. A vector of length N has N bins to put numbers in, and you keep track of the bins by labeling them with an integer. Note that you can only put one number in each bin. If we label the bins with i, $v_i$ is the information in the i$^{th}$ bin. $\vec{v}$ usually written like so, 
+This section compares functions to vectors and extrapolates the familiar vector dot product to functions, providing the foundation of the framework that takes us from matrices and vectors to functions and Diff EQ. Onwards! What is a vector? A vector $\vec{v}$ is an ordered 1D storage device. A vector of length N has N bins to put numbers in, and you keep track of the bins by labeling them with an integer. Note that you can only put one number in each bin. If we label the bins with i, $v_i$ is the information in the i$^{th}$ bin. $\vec{v}$ usually written like so, 
 
 \begin{equation}
 \vec{v} = 
@@ -130,15 +134,16 @@ Remembering that $N_c\epsilon = dx$, we get
 \begin{equation}
 f(x) \cdot g(x) = \sum_{i=-\infty}^{\infty} f(x_i)g(x_i) dx = \int_{-\infty}^{\infty} f(x)g(x)dx.
 \end{equation}
-When $f(x) \cdot g(x) = 0$, two functions are orthogonal.
+As with vectors, when $f(x) \cdot g(x) = 0$, two functions are orthogonal. 
+
+Now that we have dot products between functions down, we can develop matrix multiplication on functions. We just view matrix multiplication in terms of dot products, and BAM we've got ourselves some wacky version of linear algebra. Let's move on to this next part. 
 % consider talking about plotting vectors vs functions. vectors as arrows, functions as arrows or vectors as plots.
 
 
-%%%%%%%%%%%%%%%%%%%% DISCRETIZING LINEAR TRANSFORMATIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{DISCRETIZING LINEAR TRANSFORMATIONS}  
-
 %%%%%%%%%%%%%%%%%%%% MATRICES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Continuous Linear Transformations as Matrices}
+\section{FROM MATRICES TO 2D FUNCTIONS}
+This section develops matrix multiplication on functions in terms of dot products. Once we have this down, we can move on to write the derivative as a matrix and develop the connection between linear algebra and Diff EQ. OK so, let's figure out this matrix-function business. 
+
 A matrix transforms a vector into another vector. Consider a rotation,
 \begin{equation}
 R\vec{v} = 
@@ -155,13 +160,14 @@ v_2 \\
 v_1cos\theta  + v_2sin\theta \\
 -v_1sin\theta + v_2cos\theta \\
 \end{pmatrix}
-= \vec{v'}
+= \vec{v'}.
 \end{equation}
-The vector $\vec{v'}$ is still a vector, it's just $\vec{v}$ rotated by $\theta$. We can write the matrix multiplication in summation form like so $v'_i = \sum_j R_{ij}v_j$. We can also write the transformation in terms of dot products $v'_i = \vec{R_i} \cdot \vec{v}$. 
+The vector $\vec{v'}$ is still a vector, it's just $\vec{v}$ rotated by $\theta$. We can write the matrix multiplication in summation form like so $v'_i = \sum_j R_{ij}v_j$. We can also write the transformation in terms of dot products $v'_i = \vec{R}_i \cdot \vec{v}$, where $\vec{R}_i$ is the row vector in row i of the rotation matrix R. 
 
-We can use the dot product form to extend this to functions, $g(x) = K(x) \cdot f$. Writing out the dot product in terms of an integral yields $\int K(x,y)f(y)dy$. Integrating f(y) against the 2D function K(x,y) performs the matrix multiplication yielding the new function g(x). Let's write $Kf = g$ to represent this operation. Imagine the discretized matrix multiplication,
+We can use the function dot product to extend this to functions, $g(x) = K(x) \cdot f$, where K(x) is the $x^th$ row of the matrix K. Writing out the dot product in terms of an integral yields $\int K(x,y)f(y)dy$. Integrating f(y) against the 2D function K(x,y) performs the matrix multiplication yielding the new function g(x). Let's write $Kf = g$ to represent this operation. Imagine the discretized matrix multiplication,
 \begin{equation}
-\begin{pmatrix}
+\begin{split}
+&\begin{pmatrix}
 K(y_1,x_1) & K(y_1, x_2) & ... & K(y_1, x_N) \\
 K(y_2,x_1) & K(y_2, x_2) & ... & K(y_2, x_N) \\
 ... & ... & ... & ... \\
@@ -172,8 +178,8 @@ f(x_1) \\
 f(x_2) \\
 ... \\ 
 f(x_N) \\
-\end{pmatrix}
-=
+\end{pmatrix} \\
+&=
 \begin{pmatrix}
 K(y_1,x_1)f(x_1)dx + K(y_1, x_2)f(x_2)dx + ... + K(y_1, x_N)f(x_N) \\
 K(y_2,x_1)f(x_1)dx + K(y_2, x_2)f(x_2)dx + ... + K(y_2, x_N)f(x_N) \\
@@ -187,15 +193,19 @@ g(y_2) \\
 ...    \\
 g(y_N) \\
 \end{pmatrix}.
+\end{split}
 \end{equation}
 An example is the Fourier transform,
 \begin{equation}
-F(k,x)f(x) = \frac{1}{2\pi}\int e^{-ikx}f(x)dx = g(k). 
+F(k,x)f(x) = \frac{1}{2\pi}\int e^{-ikx}f(x)dx = g(k), 
 \end{equation} 
+which we will come back to later.
 
 %%%%%%%%%%%%%%%%%%%% DERIVATIVE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Derivative As A Matrix}
-The derivative also transforms a function into a different function, $\frac{d}{dx}f(x) = \frac{f(x+dx) - f(x)}{dx} = f'(x)$. Let's write $\frac{d}{dx}f(x)$ as a matrix multiplication $Df = \int D(y,x)f(x)dx = g(y)$,
+\section{THE DERIVATIVE AS A MATRIX}
+Just like a matrix turns a vector into another vector, the derivative turns a function into another function, $\frac{d}{dx}f(x) = \frac{f(x+dx) - f(x)}{dx} = f'(x)$. If we can understand the derivative as a matrix, we can turn differential equations (Diff EQ) problems into linear algebra problems and solve them using the same techniques. 
+
+Let's write $\frac{d}{dx}f(x)$ in our matrix multiplication $Df = \int D(y,x)f(x)dx = g(y)$ formalism,
 \begin{equation}
 \begin{split}
 Df &= \frac{1}{dxdx} 
@@ -252,13 +262,14 @@ g(y_{i+6}) \\
 \end{pmatrix}
 \end{split}
 \end{equation}
-Note that an integral multiplies by a factor of dx, and a derivative divides by dx. We need $\frac{d}{dx}f = \int D(y,x)f(x)dx$ with dimensions like $\frac{1}{dx} \sim D dx$; therefore, $D \sim \frac{1}{dxdx}$. 
+Note that an integral multiplies by a factor of dx, and a derivative divides by dx. We need $\frac{d}{dx}f = \int D(y,x)f(x)dx$ with dimensions like $\frac{1}{dx} \sim D dx$; therefore, $D \sim \frac{1}{dxdx}$.
+
+So it turns out you can pretty much just write down the derivative in matrix form. How nice. Let's use this to check out the fundamental theorem of calculus, and then return to the whole differential equations are just linear algebra business. 
 
 %%%%%%%%%%%%%%%%%%%% THE FUNDAMENTAL THEOREM OF CALCULUS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{The Fundamental Theorem of Calculus}
+\section{THE FUNDAMENTAL THEOREM OF CALCULUS}
 
-What happens if we integrate $\frac{d}{dx}f(x)$?
-
+The matrixified derivative provides some interesting insight into a familiar theorem of calculus. If I remember right, the fundamental theorem of calculus is $\int_a^b \frac{d}{dx}f(x)dx = f(a) - f(b)$. Let's see what happens if we integrate $\frac{d}{dx}f(x)$.
 \begin{equation}
 \begin{split}
 \int_a^b f'(x)dx &= 1 \cdot f'(x) = 
@@ -280,13 +291,10 @@ dx
 &= f(b) - f(a) 
 \end{split}
 \end{equation}
-Boom! The fundamental theorem of calculus. 
+Boom! The fundamental theorem of calculus. Nailed it. 
 
-%%%%%%%%%%%%%%%%%%%% GREEN FUNCTIONS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{GREEN FUNCTIONS}
-\subsection{Solving A Linear Algebra Problem}
-With a linear algebra problem like $M\vec{v} = \vec{b}$, we can solve for $\vec{v}$ by finding $M^{-1}$. With $M^{-1}$ in hand, $\vec{v} = M^{-1}\vec{b}$. Problem solved. But how do we find $M^{-1}$? Well, $M^{-1}$ is easy to find when $M$ is diagonal. Let's go to the bar basis where M is diagonal.
-
+\section{LINEAR ALGEBRA IN A NUTSHELL}
+Now onto linear algebra. If the derivative is a matrix, then any differential equation is just some linear algebra problem. Let's figure out a general method to solve some linear algebra mystery and then we can use the same strategy for Diff EQ. With a linear algebra problem like $M\vec{v} = \vec{b}$, we can solve for $\vec{v}$ by finding $M^{-1}$. With $M^{-1}$ in hand, $\vec{v} = M^{-1}\vec{b}$. Problem solved. But how do we find $M^{-1}$? Well, $M^{-1}$ is easy to find when $M$ is diagonal. Let's go to the bar basis where M is diagonal.
 \begin{equation}
 \label{minv}
 \begin{split}
@@ -349,13 +357,8 @@ T^{\dagger}T =
 \end{pmatrix}
 = 1
 \end{equation}
-$T^{\dagger}T = 1$ further implies that $T^{-1} = T^{\dagger}$ and $T = T^{-1\dagger}$. We now have the entire solution in hand. $M^{-1} = T^{\dagger}\bar{M}T$ with $\bar{M}$ given by one over the eigenvalues of $M$ (Equation \ref{minv}) and $T^{-1} = T^\dagger$ given by the eigenvectors of $M$ (Equation \ref{tinv}).
+$T^{\dagger}T = 1$ further implies that $T^{-1} = T^{\dagger}$ and $T = T^{-1\dagger}$. We now have the entire solution in hand. $M^{-1} = T^{-1}\bar{M}^{-1}T = T^{\dagger}\bar{M}^{-1}T$ with $\bar{M}$ given by one over the eigenvalues of $M$ (Equation \ref{minv}) and $T^{-1} = T^\dagger$ given by the eigenvectors of $M$ (Equation \ref{tinv}).
 
-Here's an example to solidify things. 
+Let's go through a simple example to solidify things. 
 
-DO A SIMPLE 2x2 EXAMPLE
-
-\subsection{The Green Function: The Inverse Of A Differential Operator}
-
-%%%%%%%%%%%%%%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
