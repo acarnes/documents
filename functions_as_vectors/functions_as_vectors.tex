@@ -30,11 +30,9 @@
 %%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION} \label{intro}
 
-This document is a real adventure. We look at functions as vectors and reinterpret derivatives as matrices. By viewing derivatives as matrices, we can view differential equations as linear algebra problems and use the techniques from linear algebra to solve differential equations (Diff EQ). The note starts by extrapolating dot products from vectors to functions, then uses dot products to develop matrix multiplication on functions, and then uses the matrix on function action to make the connection between linear algebra and Diff EQ. Looking at Diff EQ in this light, we find that the Green function is the inverse of a differential operator. 
+In this document, we look at functions as vectors and reinterpret derivatives as matrices. By viewing derivatives as matrices, we can view differential equations as linear algebra problems and use the techniques from linear algebra to solve problems in differential equations (Diff EQ). The note starts by extrapolating dot products from vectors to functions, then uses dot products to develop matrix multiplication on functions, and then uses the matrix-function framework to make the connection between linear algebra and Diff EQ. Looking at Diff EQ in this light, we find that the Green function is the inverse of a differential operator. 
 
-To provide some initial insight, consider the linear algebra problem $Mv=b$ with the matrix $M$ and the vectors $v$ and $b$. Finding $M^{-1}$ solves for $v$ via $v=M^{-1}b$. In the same way, the Green function $G=D^{-1}$ solves the differential equation $Df=g$ via $\int G(x,y)g(y)dy = f(x)$. The journey from vectors to functions and linear algebra to Diff EQ provides some intersting insight into some unsuspecting places like the Dirac delta function, the fundamental theorem of calculus, and Fourier transforms. 
-
-Looking at Green functions this way finally made them click and helped me a bunch with electromagnetism and quantum field theory in graduate school. Nothing here is super rigorous, but it gets the point across and provides a new way to look at some familiar things. Anywho, let's get on with the adventure.
+To provide some initial insight, consider the linear algebra problem $M\vec{v}=\vec{b}$ with the matrix $M$ and the vectors $\vec{v}$ and $\vec{b}$. Finding $M^{-1}$ solves for $\vec{v}$ via $\vec{v}=M^{-1}b$. In the same way, the Green function $G=D^{-1}$ solves the differential equation $Df=g$ via $\int G(x,y)g(y)dy = f(x)$. The journey from vectors to functions and linear algebra to Diff EQ provides some intersting insight into some unsuspecting places like the Dirac delta function, the fundamental theorem of calculus, and Fourier transforms. Nothing here is super rigorous, but the document should get the main points across and provide a new way to look at some familiar things. Anywho, let's get on with the adventure.
 
 %%%%%%%%%%%%%%%%%%%% FUNCTIONS AS VECTORS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{FUNCTIONS AS VECTORS}  
@@ -346,7 +344,7 @@ T^{-1}\vec{\bar{m}}_{i} =
 \end{pmatrix}
 = 0\vec{v}_{1} + 0 \vec{v}_{2} + ... + \vec{v}_{i} + ... + 0\vec{v}_{N} = \vec{v}_{i}.
 \end{equation} 
-Our transformation consists of orthonormal eigenvectors which implies that $T^{\dagger}T = 1$. Note that $\dagger$ represents the Hermitian conjugate. 
+T is built from orthonormal eigenvectors which implies that $T^{\dagger}T = 1$, where $\dagger$ represents the Hermitian conjugate. 
 \begin{equation}
 T^{\dagger}T =  
 \begin{pmatrix}
@@ -357,8 +355,112 @@ T^{\dagger}T =
 \end{pmatrix}
 = 1
 \end{equation}
-$T^{\dagger}T = 1$ further implies that $T^{-1} = T^{\dagger}$ and $T = T^{-1\dagger}$. We now have the entire solution in hand. $M^{-1} = T^{-1}\bar{M}^{-1}T = T^{\dagger}\bar{M}^{-1}T$ with $\bar{M}$ given by one over the eigenvalues of $M$ (Equation \ref{minv}) and $T^{-1} = T^\dagger$ given by the eigenvectors of $M$ (Equation \ref{tinv}).
+$T^{\dagger}T = 1$ further implies that $T^{-1} = T^{\dagger}$ and $T = (T^{-1})^{\dagger}$. We now have the entire solution in hand. $M^{-1} = T^{-1}\bar{M}^{-1}T = T^{\dagger}\bar{M}^{-1}T$ with $\bar{M}$ given by one over the eigenvalues of $M$ (Equation \ref{minv}) and $T^{-1} = T^\dagger$ given by the eigenvectors of $M$ (Equation \ref{tinv}).
 
-Let's go through a simple example to solidify things. 
-
+Let's go through a simple example to solidify things. Consider the linear algebra problem $M\vec{v} = \vec{b}$ with 
+\begin{equation} 
+M = 
+\begin{pmatrix}
+0 & 1 \\
+-1 & 0 \\
+\end{pmatrix},
+\vec{b} = 
+\begin{pmatrix}
+1 & 0 \\
+\end{pmatrix},
+\end{equation}
+and $\vec{v}$ unknown. To solve for $\vec{v}$, we find $M^{-1}$ following the process described above. In the eigenbasis, $M$ is diagonal and represented by $\bar{M}$,
+\begin{equation}
+\bar{M} = 
+\begin{pmatrix}
+m_1 & 0 \\
+0 & m_2 \\ 
+\end{pmatrix}.
+\end{equation}
+$\bar{M}^{-1}$ is then 
+\begin{equation}
+\bar{M} = 
+\begin{pmatrix}
+1/m_1 & 0 \\
+0 & 1/m_2 \\ 
+\end{pmatrix}.
+\end{equation}
+Finally, $M^{-1} = T^{-1}\bar{M}^{-1}T$, where $T$ converts from the non-bar to the bar basis, and $T^{-1}$ converts from the bar basis to the non-bar basis. $T^{-1}$ is built from the eigenvectors of M, $\vec{m}_1$ and $\vec{m}_2$. Now we just need the eigenvalues and eigenvectors. We use the canonical equation $det[M - 1m_i] = 0$ to get the eigenvalues, 
+\begin{equation}
+det[M] = det\left[
+\begin{pmatrix}
+m_i & 1 \\
+-1 & m_i \\ 
+\end{pmatrix}\right] = m_i^2 + 1 = 0.
+\end{equation}
+This yields $m_1 = i$ and $m_2 = -i$. Now onto the eigenvectors,
+\begin{equation}
+M\vec{m}_i = m_i\vec{m}_i =
+\begin{pmatrix}
+0 & 1 \\
+-1 & 0 \\ 
+\end{pmatrix} 
+\begin{pmatrix}
+m_{i1} \\ m_{i2} \\
+\end{pmatrix}
+=
+m_i
+\begin{pmatrix}
+m_{i1} \\ m_{i2} \\
+\end{pmatrix}. 
+\end{equation}
+Plugging in $m_1=i$ provides $im_{11} = m_{12}$, while $m_2=-i$ provides $-im_{21} = m_{22}$. Choosing $m_{11} = 1$ and $m_{21} = 1$ sets the eigenvectors to 
+\begin{equation}
+\vec{m}_1 = 
+\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1 \\ i \\
+\end{pmatrix}
+\text{ and }
+\vec{m}_2 = 
+\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1 \\ -i \\
+\end{pmatrix}.
+\end{equation}
+$T^{-1}$ is then given by 
+\begin{equation}
+T^{-1} =
+\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1 & 1 \\
+i & -i \\
+\end{pmatrix}.
+\end{equation}
+And the Hermitian conjugate of $T^{-1}$ provides $T$,
+\begin{equation}
+T =
+\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1 & -i \\
+1 & i \\
+\end{pmatrix}.
+\end{equation}
+Putting everything together,
+\begin{equation}
+M^{-1} = T^{-1}\bar{M}^{-1}T =
+\frac{1}{2}
+\begin{pmatrix}
+1 & 1 \\
+i & -i \\
+\end{pmatrix}
+\begin{pmatrix}
+-i & 0 \\
+0 & i \\
+\end{pmatrix}
+\begin{pmatrix}
+1 & -i \\
+1 & i \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 & -1 \\
+1 & 0 \\
+\end{pmatrix}.
+\end{equation}
 \end{document}
