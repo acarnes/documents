@@ -30,9 +30,9 @@
 %%%%%%%%%%%%%%%%%%%% INTRODUCTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION} \label{intro}
 
-In this document, we look at functions as vectors and reinterpret derivatives as matrices. By viewing derivatives as matrices, we can view differential equations as linear algebra problems and use the techniques from linear algebra to solve problems in differential equations (Diff EQ). The note starts by extrapolating dot products from vectors to functions, then uses dot products to develop matrix multiplication on functions, and then uses the matrix-function framework to make the connection between linear algebra and Diff EQ. Looking at Diff EQ in this light, we find that the Green function is the inverse of a differential operator. 
+In this document, we look at differential equations as linear algebra problems, and we look at the Green function as the inverse of a differential operator. Consider the linear algebra problem $M\vec{v}=\vec{b}$ with the matrix $M$ and the vectors $\vec{v}$ and $\vec{b}$. Finding $M^{-1}$ solves for $\vec{v}$ via $\vec{v}=M^{-1}b$. In the same way, the Green function $G=D^{-1}$ solves the differential equation $Df=g$, where D is some differential operator and f and g are functions. In order to view the Green function this way, we develop a corresopndence between matrices and derivatives and functions and vectors. The note starts by extrapolating dot products from vectors to functions, then uses dot products to develop matrix multiplication on functions, and then uses the matrix-function framework to make the connection between linear algebra and Diff EQ. Looking at Diff EQ in this light, we find that the Green function is the inverse of a differential operator. 
 
-To provide some initial insight, consider the linear algebra problem $M\vec{v}=\vec{b}$ with the matrix $M$ and the vectors $\vec{v}$ and $\vec{b}$. Finding $M^{-1}$ solves for $\vec{v}$ via $\vec{v}=M^{-1}b$. In the same way, the Green function $G=D^{-1}$ solves the differential equation $Df=g$ via $\int G(x,y)g(y)dy = f(x)$. The journey from vectors to functions and linear algebra to Diff EQ provides some intersting insight into some unsuspecting places like the Dirac delta function, the fundamental theorem of calculus, and Fourier transforms. Nothing here is super rigorous, but the document should get the main points across and provide a new way to look at some familiar things. Anywho, let's get on with the adventure.
+The journey from vectors to functions and linear algebra to Diff EQ provides some intersting insight into some unsuspecting places like the Dirac delta function, the fundamental theorem of calculus, and Fourier transforms. Nothing here is super rigorous, but the document should get the main points across and provide a new way to look at some familiar things. Anywho, let's get on with the adventure.
 
 %%%%%%%%%%%%%%%%%%%% FUNCTIONS AS VECTORS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{FUNCTIONS AS VECTORS}  
@@ -292,7 +292,7 @@ dx
 Boom! The fundamental theorem of calculus. Nailed it. 
 
 \section{LINEAR ALGEBRA IN A NUTSHELL}
-Now onto linear algebra. If the derivative is a matrix, then any differential equation is just some linear algebra problem. Let's figure out a general method to solve some linear algebra mystery and then we can use the same strategy for Diff EQ. With a linear algebra problem like $M\vec{v} = \vec{b}$, we can solve for $\vec{v}$ by finding $M^{-1}$. With $M^{-1}$ in hand, $\vec{v} = M^{-1}\vec{b}$. Problem solved. But how do we find $M^{-1}$? Well, $M^{-1}$ is easy to find when $M$ is diagonal. Let's go to the bar basis where M is diagonal.
+Now onto linear algebra. If the derivative is a matrix, then any differential equation is just some linear algebra problem. Let's figure out a general method to solve some linear algebra mystery, and then we can use the same strategy for Diff EQ. With a linear algebra problem like $M\vec{v} = \vec{b}$, we can solve for $\vec{v}$ by finding $M^{-1}$. With $M^{-1}$ in hand, $\vec{v} = M^{-1}\vec{b}$. Problem solved. But how do we find $M^{-1}$? Well, $M^{-1}$ is easy to find when $M$ is diagonal. Let's go to the bar basis where M is diagonal.
 \begin{equation}
 \label{minv}
 \begin{split}
@@ -463,4 +463,23 @@ i & -i \\
 1 & 0 \\
 \end{pmatrix}.
 \end{equation}
+Now we use the inverse matrix to solve the linear algebra problem,
+\begin{equation}
+\begin{pmatrix}
+0 & -1 \\
+1 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+1 \\
+0 \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 \\
+1 \\
+\end{pmatrix}.
+\end{equation}
+Finally, we find that $\vec{v} = \begin{pmatrix} 1 \\ 0 \\ \end{pmatrix}$, solving our linear algebra problem.
+
+In this section, we learned a general method to solve $M\vec{v}=\vec{b}$. We built $M^{-1}$ using the eigenvalues and eigenvectors of $M$ and used $M^{-1}$ to solve for $\vec{v}$. In the next section, we will solve the differential equation $Df=g$, where D is a differential operator and f and g are functions. We will build $D^{-1}$ from the eigenvalues and eigenfunctions of D and solve the differential equation for f. 
 \end{document}
